@@ -1,0 +1,122 @@
+[project]
+name = "leisaac"
+version = "0.3.0"
+description = "leisaac: Lerobot & IsaacLab Integration"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Yinghao Shuai", email = "yinghao.shuai@lightwheel.ai" }]
+keywords = ["extension", "isaaclab", "leisaac", "lerobot"]
+classifiers = [
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "deepdiff",
+    "feetech-servo-sdk",
+    "psutil",
+    "pygame>=2.5.1,<2.7.0",
+    "pyserial",
+    "isaacsim[all,extscache]==5.1.0.0",
+    "torch==2.7.0",
+    "torchvision==0.22.0",
+    "isaaclab",
+    "isaaclab-assets",
+    "isaaclab-tasks",
+    "h5py>=3.16.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/LightwheelAI/leisaac"
+Repository = "https://github.com/LightwheelAI/leisaac"
+
+[project.optional-dependencies]
+isaaclab = ["isaaclab[isaacsim,all]==2.3.0"]
+gr00t = ["pyzmq>=27.0.0", "pydantic==2.10.6", "msgpack>=1.0.5"]
+lerobot-async = ["grpcio==1.74.0", "protobuf==6.32.0"]
+rl = ["isaaclab-mimic[all]", "isaaclab-rl[all]"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["source/leisaac/leisaac"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6.3",
+    "mypy>=1.11.2",
+    "pre-commit>=3.8.0",
+    "pytest>=8.3.2",
+    "pytest-sugar>=1.0.0",
+    "types-pyyaml>=6.0.12.20241230",
+    "git-cliff>=2.8.0",
+]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+override-dependencies = [
+    "pywin32==306; sys_platform == 'win32'",
+    # isaacsim-core pins packaging==23.0 but lerobot needs packaging>=24.2
+    # override to allow both to coexist (isaacsim works fine with newer packaging)
+    "packaging>=24.2",
+]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128" }]
+torchvision = [{ index = "pytorch-cu128" }]
+isaacsim = [{ index = "nvidia" }]
+isaaclab = { path = "dependencies/IsaacLab/source/isaaclab", editable = true }
+isaaclab-assets = { path = "dependencies/IsaacLab/source/isaaclab_assets", editable = true }
+isaaclab-tasks = { path = "dependencies/IsaacLab/source/isaaclab_tasks", editable = true }
+isaaclab-rl = { path = "dependencies/IsaacLab/source/isaaclab_rl", editable = true }
+isaaclab-mimic = { path = "dependencies/IsaacLab/source/isaaclab_mimic", editable = true }
+leisaac = { path = "source/leisaac", editable = true }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com"
+explicit = true
+
+## Test
+[tool.mypy]
+strict = false
+exclude = ["venv", ".venv", "data"]
+
+[tool.pytest.ini_options]
+addopts = "-rXs --strict-config --strict-markers"
+xfail_strict = true
+filterwarnings = ["error"]
+
+## Linter and formatter
+[tool.ruff]
+extend-exclude = ["dependencies"]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+
+isort = { combine-as-imports = true, split-on-trailing-comma = false }
+unfixable = ["B"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+docstring-code-format = true
+skip-magic-trailing-comma = true
