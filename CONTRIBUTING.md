@@ -33,17 +33,24 @@ For non-trivial changes (new features, refactors, API changes), please open an i
 
 ## Style and linting
 
-LeIsaac uses `pre-commit` for formatting and lint checks (see `.pre-commit-config.yaml` at the repo root). GitHub Actions also runs these checks on every PR/update.
+LeIsaac uses [uv](https://docs.astral.sh/uv/) for dependency management and [Ruff](https://docs.astral.sh/ruff/) for formatting and linting. `pre-commit` hooks enforce these checks automatically (see `.pre-commit-config.yaml`). GitHub Actions also runs these checks on every PR/update.
 
 It is strongly recommended to run the checks locally before opening/updating a PR.
 
 ```bash
-# Install pre-commit:
-pip install pre-commit
+# Install dev dependencies (includes pre-commit, ruff, mypy, etc.):
+uv sync --dev
+
 # Install the git hooks (one time per clone):
-pre-commit install
-# Run all hooks on all files (recommended before opening/updating a PR):
-pre-commit run --all-files
+uv run pre-commit install
+
+# Run all hooks on all files:
+uv run pre-commit run --all-files
+
+# Or use the dev script for formatting / linting / full checks:
+./dev.sh format
+./dev.sh lint
+./dev.sh check
 ```
 
 ## License
