@@ -13,9 +13,72 @@ This repository provides teleoperation functionality in [IsaacLab](https://isaac
 >
 > Join us, contribute, and help shape the future of AI and robotics. For questions or collaboration, contact [Zeyu](mailto:zeyu.hu@lightwheel.ai) or [Yinghao](mailto:yinghao.shuai@lightwheel.ai).
 
-## Getting Started 📚
+## Quick Start 📚
 
-Please refer to our [documentation](https://lightwheelai.github.io/leisaac/) to learn how to use this repository. Follow these links to learn more about:
+### Prerequisites
+
+- Linux (Ubuntu 22.04+)
+- Python 3.11
+- NVIDIA GPU with CUDA 12.8+
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) package manager
+
+### Installation
+
+```bash
+# Clone with submodules
+git clone --recurse-submodules https://github.com/LightwheelAI/leisaac.git
+cd leisaac
+
+# Install all dependencies (uv will create a virtual environment automatically)
+uv sync
+
+# Install with optional extras
+uv sync --extra lerobot --extra gr00t
+
+# Install dev tools
+uv sync --dev
+```
+
+### Development Setup
+
+```bash
+# Install pre-commit hooks
+uv run pre-commit install
+
+# Run formatting / linting / full checks
+./dev.sh format
+./dev.sh lint
+./dev.sh check
+```
+
+### Asset Preparation
+
+Scene USD and robot model files are **not included** in the git repo (gitignored). Download them separately:
+
+```bash
+# Download example scene + robot from GitHub Releases
+gh release download v0.1.0 --repo LightwheelAI/leisaac --dir /tmp/leisaac-assets --clobber
+
+# Extract scene
+unzip /tmp/leisaac-assets/kitchen_with_orange.zip -d assets/scenes/
+
+# Copy robot model
+cp /tmp/leisaac-assets/so101_follower.usd assets/robots/
+```
+
+Additional scenes (from [Releases](https://github.com/LightwheelAI/leisaac/releases) or [HuggingFace](https://huggingface.co/LightwheelAI/leisaac_env/tree/main)):
+
+| Scene | Download |
+|---|---|
+| Kitchen with Orange | [v0.1.0](https://github.com/LightwheelAI/leisaac/releases/tag/v0.1.0) |
+| Lightwheel Toyroom | [v0.1.1](https://github.com/LightwheelAI/leisaac/releases/tag/v0.1.1) |
+| Table with Cube | [v0.1.2](https://github.com/LightwheelAI/leisaac/releases/tag/v0.1.2) |
+| Lightwheel Bedroom | [v0.2.0](https://github.com/LightwheelAI/leisaac/releases/tag/v0.2.0) |
+| Lightwheel Loft | [v0.3.0](https://github.com/LightwheelAI/leisaac/releases/tag/v0.3.0) |
+
+### Documentation
+
+Please refer to our [documentation](https://lightwheelai.github.io/leisaac/) for detailed guides:
 
 - [Installation and Setup](https://lightwheelai.github.io/leisaac/docs/getting_started/installation)
 - [Extra Features](https://lightwheelai.github.io/leisaac/docs/features)
